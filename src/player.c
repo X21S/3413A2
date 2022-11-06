@@ -7,6 +7,7 @@
 
 #include "console.h"
 #include "event.h"
+#include "drawer.h"
 
 struct player_
 {
@@ -70,18 +71,18 @@ void* PlayerLoop(void* gameRaw)
    while(GetRunning(game))
    {
       player_t player = GetPlayer(game);
+      drawer_t drawer = GetDrawer(game);
 
-      PlayerPrintScore(player);
-      PlayerPrintHealth(player);
+      PlayerPrintScore(player, drawer);
+      PlayerPrintHealth(player, drawer);
 
-      consoleClearImage(player->posY, player->posX,
+      ClearImage(drawer, player->posY, player->posX,
             player->playerTileHeight, strlen(player->playerTile[0]));
 
       PlayerProcessEvent(game);
 
-      consoleDrawImage(player->posY, player->posX,
+      DrawImage(drawer, player->posY, player->posX,
             player->playerTile, player->playerTileHeight);
-      consoleRefresh();
 
       sleepTicks(GAME_PLAYER_SLEEP_TICKS);
    }
@@ -130,15 +131,15 @@ void PlayerMove(player_t player, int dx, int dy)
    pthread_mutex_unlock(&player->lock);
 }
 
-void PlayerPrintScore(player_t player)
+void PlayerPrintScore(player_t player, drawer_t drawer)
 {
-   if(player == NULL)
+   if(player == NULL || drawer == NULL)
       return;
 
    if(player->scoreOld != player->score)
    {
       snprintf(player->scoreStr,  GAME_PLAYER_SCORE_LENGTH,  "%i", player->score);
-      putString(player->scoreStr,
+      DrawString(drawer, player->scoreStr,
             GAME_PLAYER_SCORE_POS_Y, GAME_PLAYER_SCORE_POS_X,
             GAME_PLAYER_SCORE_LENGTH);
 
@@ -146,15 +147,15 @@ void PlayerPrintScore(player_t player)
    }
 }
 
-void PlayerPrintHealth(player_t player)
+void PlayerPrintHealth(player_t player, drawer_t drawer)
 {
-   if(player == NULL)
+   if(player == NULL || drawer == NULL)
       return;
 
    if(player->healthOld != player->health)
    {
       snprintf(player->healthStr, GAME_PLAYER_HEALTH_LENGTH, "%i", player->health);
-      putString(player->healthStr,
+      DrawString(drawer, player->healthStr,
             GAME_PLAYER_HEALTH_POS_Y, GAME_PLAYER_HEALTH_POS_X,
             GAME_PLAYER_HEALTH_LENGTH);
 

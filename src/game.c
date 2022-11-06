@@ -7,15 +7,19 @@
 
 #include "player.h"
 #include "event.h"
+#include "drawer.h"
 
 struct game_
 {
    int isRunning;
+
    player_t player;
    event_t event;
+   drawer_t drawer;
 
    pthread_t playerThread;
    pthread_t eventThread;
+   pthread_t drawerThread;
 
    pthread_mutex_t lock;
 };
@@ -27,10 +31,12 @@ game_t GameStart()
       return NULL;
 
    game->isRunning = true;
-   game->player = PlayerCreate();
    game->event = EventCreate();
+   game->drawer = DrawerCreate();
+   game->player = PlayerCreate();
 
    pthread_create(&game->eventThread, NULL, EventLoop, game);
+   pthread_create(&game->drawerThread, NULL, DrawerLoop, game);
    pthread_create(&game->playerThread, NULL, PlayerLoop, game);
 
    return game;
@@ -38,14 +44,22 @@ game_t GameStart()
 
 void GameDestroy(game_t game)
 {
+   if(game == NULL)
+      return;
+
    PlayerDestroy(GetPlayer(game));
+   DrawerDestroy(GetDrawer(game));
    EventDestroy(GetEvent(game));
    free(game);
 }
 
 void GameWait(game_t game)
 {
+   if(game == NULL)
+      return;
+
    pthread_join(game->playerThread, NULL);
+   pthread_join(game->drawerThread, NULL);
    pthread_join(game->eventThread, NULL);
 }
 
@@ -54,7 +68,8 @@ int GameCheckNull(game_t game)
    if(game == NULL)
       return true;
    if(game->player == NULL ||
-      game->event == NULL)
+      game->event == NULL ||
+      game->drawer == NULL)
       return true;
 
    return false;
@@ -86,6 +101,15 @@ event_t GetEvent(game_t game)
    if(game->event == NULL)
       return NULL; //TODO: create error signal
    return game->event;
+}
+
+drawer_t GetDrawer(game_t game)
+{
+   if(game == NULL)
+      return NULL; //TODO: create error signal
+   if(game->drawer == NULL)
+      return NULL; //TODO: create error signal
+   return game->drawer;
 }
 
 int GetRunning(game_t game)

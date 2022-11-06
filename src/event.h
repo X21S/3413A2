@@ -1,7 +1,5 @@
-#ifndef CATERPILLARS_KEYS_H
-#define CATERPILLARS_KEYS_H
-
-#include <pthread.h>
+#ifndef CATERPILLARS_EVENT_H
+#define CATERPILLARS_EVENT_H
 
 #include "game.h"
 

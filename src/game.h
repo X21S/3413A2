@@ -4,6 +4,7 @@
 //Ugly code
 typedef struct player_* player_t;
 typedef struct event_* event_t;
+typedef struct drawer_* drawer_t;
 
 struct game_;
 typedef struct game_* game_t;
@@ -17,6 +18,7 @@ void GameExit(game_t);
 
 player_t GetPlayer(game_t);
 event_t  GetEvent(game_t);
+drawer_t GetDrawer(game_t);
 int      GetRunning(game_t);
 
 #endif
