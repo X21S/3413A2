@@ -1,29 +1,19 @@
 #ifndef CATERPILLARS_GAME_H
 #define CATERPILLARS_GAME_H
 
-#include <pthread.h>
-
 //Ugly code
 typedef struct player_* player_t;
 typedef struct event_* event_t;
 
-struct game_
-{
-   int isRunning;
-   player_t player;
-   event_t event;
-
-   pthread_t* playerThread;
-   pthread_t* eventThread;
-
-
-   pthread_mutex_t lock;
-};
+struct game_;
 typedef struct game_* game_t;
 
 game_t GameStart();
+void GameWait(game_t);
 void GameDestroy(game_t);
+
 int GameCheckNull(game_t);
+void GameExit(game_t);
 
 player_t GetPlayer(game_t);
 event_t  GetEvent(game_t);

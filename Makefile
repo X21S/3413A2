@@ -5,7 +5,7 @@ EXE = centipede
 CFLAGS = -Wall -pthread -std=c99
 LIBS = -lcurses -lpthread
 
-OBJS := main.o console.o player.o game.o
+OBJS := main.o console.o player.o game.o event.o
 
 all: release
 

@@ -7,17 +7,11 @@
 
 struct event_;
 typedef struct event_* event_t;
-//typedef struct
-//{
-//  char pressedKey;
-//} Event;
 
-//typedef struct
-//{
-//  pthread_mutex_t lock;
-//} EventThread;
+event_t EventCreate();
+void EventDestroy(event_t);
+void* EventLoop(void*);
 
-void ProcessEvent(event_t*);
-void EventLoop(game_t*);
+char EventProcessKey(event_t);
 
 #endif

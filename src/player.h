@@ -11,7 +11,12 @@ typedef struct player_* player_t;
 
 player_t PlayerCreate();
 void PlayerDestroy(player_t);
-int PlayerLoop(game_t);
+void* PlayerLoop(void*);
 
+void PlayerProcessEvent(game_t game);
+void PlayerMove(player_t player, int dx, int dy);
+
+void PlayerPrintScore(player_t player);
+void PlayerPrintHealth(player_t player);
 
 #endif
